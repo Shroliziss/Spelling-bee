@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spelling Bee Arcade - 8th Grade Challenge</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Pixel Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0f071a;
+      --panel-bg: #1a0b2e;
+      --neon-green: #00ff66;
+      --neon-pink: #ff007f;
+      --neon-purple: #a855f7;
+      --neon-blue: #00f0ff;
+      --pixel-yellow: #ffcc00;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      font-family: 'VT323', monospace;
+      color: #ffffff;
+      background-image: 
+        radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.15) 0%, transparent 60%),
+        radial-gradient(#261142 1px, transparent 1px);
+      background-size: 100% 100%, 20px 20px;
+    }
+
+    .pixel-font-title {
+      font-family: 'Press Start 2P', cursive;
+    }
+
+    /* Pixel Box Container */
+    .pixel-box {
+      background: var(--panel-bg);
+      border: 4px solid var(--neon-purple);
+      box-shadow: 
+        inset -4px -4px 0px 0px #0b0214,
+        inset 4px 4px 0px 0px #3b1860,
+        0 0 15px rgba(168, 85, 247, 0.4);
+      position: relative;
+    }
+
+    /* Pixel Buttons with 3D press effect */
+    .pixel-btn {
+      font-family: 'Press Start 2P', cursive;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 16px;
+      font-size: 12px;
+      text-transform: uppercase;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.1s ease;
+      border: 4px solid #000;
+      image-rendering: pixelated;
+    }
+
+    .pixel-btn-pink {
+      background-color: var(--neon-pink);
+      color: #fff;
+      box-shadow: inset -4px -4px 0px 0px #99004d, 0 6px 0px 0px #000, 0 6px 12px rgba(255, 0, 127, 0.4);
+    }
+
+    .pixel-btn-pink:hover {
+      background-color: #ff3399;
+      transform: translateY(-2px);
+      box-shadow: inset -4px -4px 0px 0px #99004d, 0 8px 0px 0px #000, 0 8px 16px rgba(255, 0, 127, 0.5);
+    }
+
+    .pixel-btn-pink:active, .pixel-btn-pink.is-pressed {
+      transform: translateY(4px);
+      box-shadow: inset -4px -4px 0px 0px #99004d, 0 2px 0px 0px #000, 0 2px 4px rgba(255, 0, 127, 0.4);
+    }
+
+    .pixel-btn-yellow {
+      background-color: var(--pixel-yellow);
+      color: #000;
+      box-shadow: inset -4px -4px 0px 0px #997a00, 0 6px 0px 0px #000, 0 6px 12px rgba(255, 204, 0, 0.4);
+    }
+
+    .pixel-btn-yellow:hover {
+      background-color: #ffdd33;
+      transform: translateY(-2px);
+      box-shadow: inset -4px -4px 0px 0px #997a00, 0 8px 0px 0px #000;
+    }
+
+    .pixel-btn-yellow:active, .pixel-btn-yellow.is-pressed {
+      transform: translateY(4px);
+      box-shadow: inset -4px -4px 0px 0px #997a00, 0 2px 0px 0px #000;
+    }
+
+    .pixel-btn-green {
+      background-color: var(--neon-green);
+      color: #000;
+      box-shadow: inset -4px -4px 0px 0px #00993d, 0 6px 0px 0px #000, 0 6px 12px rgba(0, 255, 102, 0.4);
+    }
+
+    .pixel-btn-green:hover {
+      background-color: #33ff85;
+      transform: translateY(-2px);
+      box-shadow: inset -4px -4px 0px 0px #00993d, 0 8px 0px 0px #000;
+    }
+
+    .pixel-btn-green:active, .pixel-btn-green.is-pressed {
+      transform: translateY(4px);
+      box-shadow: inset -4px -4px 0px 0px #00993d, 0 2px 0px 0px #000;
+    }
+
+    .pixel-btn-blue {
+      background-color: var(--neon-blue);
+      color: #000;
+      box-shadow: inset -4px -4px 0px 0px #0099a3, 0 6px 0px 0px #000;
+    }
+
+    .pixel-btn-blue:hover {
+      background-color: #33f3ff;
+      transform: translateY(-2px);
+      box-shadow: inset -4px -4px 0px 0px #0099a3, 0 8px 0px 0px #000;
+    }
+
+    .pixel-btn-blue:active {
+      transform: translateY(4px);
+      box-shadow: inset -4px -4px 0px 0px #0099a3, 0 2px 0px 0px #000;
+    }
+
+    .pixel-tab {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 10px;
+      padding: 10px 14px;
+      border: 3px solid #000;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .pixel-tab-active {
+      background-color: var(--neon-pink);
+      color: #ffffff;
+      box-shadow: inset -3px -3px 0px 0px #99004d;
+      transform: translateY(-3px);
+    }
+
+    .pixel-tab-inactive {
+      background-color: #261142;
+      color: #a855f7;
+      box-shadow: inset -3px -3px 0px 0px #000;
+    }
+
+    .pixel-input {
+      font-family: 'Press Start 2P', cursive;
+      background-color: #0b0214;
+      border: 4px solid var(--neon-purple);
+      color: var(--neon-green);
+      outline: none;
+      box-shadow: inset 4px 4px 0px 0px #000;
+    }
+
+    .pixel-input:focus {
+      border-color: var(--neon-pink);
+      box-shadow: inset 4px 4px 0px 0px #000, 0 0 10px rgba(255, 0, 127, 0.5);
+    }
+
+    /* Heart animation */
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+    .pixel-heart {
+      display: inline-block;
+      color: var(--neon-pink);
+      animation: heartbeat 1.5s infinite ease-in-out;
+    }
+
+    /* CRT Overlay Effect */
+    .crt-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+      background-size: 100% 4px;
+      z-index: 99;
+      pointer-events: none;
+      opacity: 0.25;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-between p-3 md:p-6 select-none">
+
+  <div class="crt-overlay"></div>
+
+  <!-- Header Section -->
+  <header class="w-full max-w-4xl flex flex-wrap items-center justify-between gap-4 bg-[#140824] border-4 border-[#ff007f] p-4 shadow-[0_0_15px_rgba(255,0,127,0.3)] z-10">
+    <div class="flex items-center gap-2">
+      <span class="pixel-heart text-xl">♥</span>
+      <span class="pixel-heart text-xl">♥</span>
+      <span class="pixel-heart text-xl">♥</span>
+      <span class="pixel-font-title text-xs md:text-sm text-[#ff007f] ml-2">8th GRADE SPELLING BEE</span>
+    </div>
+
+    <!-- Mode Selector Buttons -->
+    <div class="flex items-center gap-2">
+      <button id="mode-present-btn" onclick="setMode('present')" class="pixel-btn pixel-btn-blue text-[10px] py-2 px-3">
+        📺 CLASS MODE
+      </button>
+      <button id="mode-quiz-btn" onclick="setMode('quiz')" class="pixel-btn pixel-btn-yellow text-[10px] py-2 px-3">
+        🎮 QUIZ MODE
+      </button>
+    </div>
+  </header>
+
+  <!-- Level Selection Tabs -->
+  <div class="w-full max-w-4xl flex flex-wrap justify-center gap-2 mt-4 z-10">
+    <button id="tab-easy" onclick="selectLevel('easy')" class="pixel-tab pixel-tab-active flex items-center gap-2">
+      <span>🟢 EASY</span>
+    </button>
+    <button id="tab-medium" onclick="selectLevel('medium')" class="pixel-tab pixel-tab-inactive flex items-center gap-2">
+      <span>🟡 MEDIUM</span>
+    </button>
+    <button id="tab-hard" onclick="selectLevel('hard')" class="pixel-tab pixel-tab-inactive flex items-center gap-2">
+      <span>🔴 HARD</span>
+    </button>
+    <button id="tab-challenge" onclick="selectLevel('challenge')" class="pixel-tab pixel-tab-inactive flex items-center gap-2">
+      <span>🏆 CHALLENGE</span>
+    </button>
+  </div>
+
+  <!-- Main Display Card -->
+  <main class="w-full max-w-4xl my-auto py-4 z-10">
+    <div class="pixel-box p-5 md:p-8 text-center relative overflow-hidden">
+      
+      <!-- Top Status Bar -->
+      <div class="flex justify-between items-center mb-4 text-xl md:text-2xl text-[#00f0ff] tracking-widest border-b-2 border-purple-800 pb-2">
+        <span id="level-title-display">LEVEL: 🟢 EASY</span>
+        <span id="word-counter" class="text-[#ffcc00] font-bold">1 / 10</span>
+      </div>
+
+      <!-- MAIN LISTEN BUTTON -->
+      <div class="my-5">
+        <button id="listen-main-btn" onclick="speakCurrentWord()" class="pixel-btn pixel-btn-pink w-full md:w-4/5 py-5 text-xl md:text-2xl tracking-wider">
+          <i data-lucide="volume-2" class="w-8 h-8 md:w-10 md:h-10"></i>
+          <span>LISTEN / ESCUCHAR 🔊</span>
+        </button>
+      </div>
+
+      <!-- Speed Control Options -->
+      <div class="flex justify-center items-center gap-3 mb-6 text-sm">
+        <span class="text-purple-300 font-sans font-bold text-xs">VOICE SPEED:</span>
+        <button onclick="setSpeed(1.0)" id="speed-normal" class="px-3 py-1 bg-purple-600 border-2 border-purple-300 text-white font-bold text-xs">
+          NORMAL (1.0x)
+        </button>
+        <button onclick="setSpeed(0.65)" id="speed-slow" class="px-3 py-1 bg-purple-950 border-2 border-purple-800 text-gray-400 hover:bg-purple-700 text-xs">
+          SLOW 🐢 (0.65x)
+        </button>
+      </div>
+
+      <!-- MODE 1: PRESENTATION MODE (REVEAL FOR CLASSROOM SCREEN) -->
+      <div id="present-container" class="space-y-5">
+        <!-- Word Display Screen -->
+        <div class="min-h-[85px] flex items-center justify-center bg-[#090312] border-4 border-[#00ff66] p-3 shadow-inner">
+          <div id="word-display" class="pixel-font-title text-2xl md:text-4xl lg:text-5xl tracking-widest text-[#00ff66] break-all">
+            ? ? ? ? ?
+          </div>
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-3 pt-1">
+          <button onclick="revealWord()" class="pixel-btn pixel-btn-green text-xs">
+            <i data-lucide="eye"></i> REVEAL ALL
+          </button>
+          <button onclick="revealLetterByLetter()" class="pixel-btn pixel-btn-blue text-xs">
+            <i data-lucide="text-cursor-input"></i> LETTER BY LETTER
+          </button>
+          <button onclick="toggleTranslation()" class="pixel-btn pixel-btn-yellow text-xs">
+            <i data-lucide="languages"></i> SPANISH MEANING
+          </button>
+        </div>
+      </div>
+
+      <!-- MODE 2: QUIZ MODE (STUDENT TYPING TEST) -->
+      <div id="quiz-container" class="space-y-5 hidden">
+        <div class="flex flex-col items-center gap-3">
+          <input type="text" id="quiz-input" placeholder="TYPE THE WORD..." autocomplete="off" spellcheck="false" class="pixel-input w-full md:w-4/5 p-4 text-center text-lg md:text-xl uppercase" onkeyup="if(event.key==='Enter') checkSpelling()" />
+          
+          <button onclick="checkSpelling()" class="pixel-btn pixel-btn-green w-full md:w-4/5 py-3 text-xs md:text-sm">
+            <i data-lucide="check-circle-2"></i> CHECK SPELLING
+          </button>
+        </div>
+
+        <!-- Feedback Message Box -->
+        <div id="quiz-feedback" class="hidden p-3 border-4 text-lg md:text-xl font-bold">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Translation & Meaning Box -->
+      <div id="hint-box" class="mt-6 p-3 bg-[#130722] border-2 border-purple-700 text-purple-200 text-lg md:text-xl flex items-center justify-center gap-2">
+        <i data-lucide="sparkles" class="text-yellow-400 w-5 h-5 flex-shrink-0"></i>
+        <span id="hint-text">Significado: Haz clic en "SPANISH MEANING" para ver.</span>
+      </div>
+
+    </div>
+
+    <!-- Bottom Controls Bar -->
+    <div class="flex justify-between items-center gap-3 mt-4">
+      <button onclick="prevWord()" class="pixel-btn pixel-btn-blue text-xs py-3 px-4">
+        ◀ PREV
+      </button>
+
+      <button onclick="randomWord()" class="pixel-btn pixel-btn-yellow text-xs py-3 px-4">
+        🎲 RANDOM
+      </button>
+
+      <button onclick="nextWord()" class="pixel-btn pixel-btn-pink text-xs py-3 px-4">
+        NEXT ▶
+      </button>
+    </div>
+  </main>
+
+  <footer class="text-center text-xs text-purple-400 font-mono py-2 z-10">
+    Pixel Arcade Spelling Bee • 8th Grade English Activity
+  </footer>
+
+  <script>
+    // Exact User Word Database divided by 4 Levels
+    const wordLevels = {
+      easy: [
+        { word: "BEAUTIFUL", meaning: "Hermoso / Bonita" },
+        { word: "MORNING", meaning: "Mañana" },
+        { word: "TEACHER", meaning: "Profesor / Profesora" },
+        { word: "FRIEND", meaning: "Amigo / Amiga" },
+        { word: "FAMILY", meaning: "Familia" },
+        { word: "COUNTRY", meaning: "País" },
+        { word: "GARDEN", meaning: "Jardín" },
+        { word: "PICTURE", meaning: "Imagen / Fotografía" },
+        { word: "JOURNEY", meaning: "Viaje" },
+        { word: "LIBRARY", meaning: "Biblioteca" }
+      ],
+      medium: [
+        { word: "KNOWLEDGE", meaning: "Conocimiento" },
+        { word: "ENVIRONMENT", meaning: "Medio ambiente" },
+        { word: "DIFFERENT", meaning: "Diferente" },
+        { word: "IMPORTANT", meaning: "Importante" },
+        { word: "DELICIOUS", meaning: "Delicioso" },
+        { word: "FAVORITE", meaning: "Favorito" },
+        { word: "ADVENTURE", meaning: "Aventura" },
+        { word: "SUCCESSFUL", meaning: "Exitoso / Exitosa" },
+        { word: "NECESSARY", meaning: "Necesario" },
+        { word: "SURPRISE", meaning: "Sorpresa" }
+      ],
+      hard: [
+        { word: "ACHIEVEMENT", meaning: "Logro" },
+        { word: "OPPORTUNITY", meaning: "Oportunidad" },
+        { word: "RESPONSIBILITY", meaning: "Responsabilidad" },
+        { word: "INDEPENDENT", meaning: "Independiente" },
+        { word: "CONSCIOUS", meaning: "Consciente" },
+        { word: "QUESTIONNAIRE", meaning: "Cuestionario" },
+        { word: "EXTRAORDINARY", meaning: "Extraordinario" },
+        { word: "MISCHIEVOUS", meaning: "Travieso / Traviesa" },
+        { word: "PRIVILEGE", meaning: "Privilegio" },
+        { word: "EMBARRASSMENT", meaning: "Vergüenza" }
+      ],
+      challenge: [
+        { word: "ACQUAINTANCE", meaning: "Conocido / Conocida" },
+        { word: "ENTREPRENEUR", meaning: "Emprendedor / Emprendedora" },
+        { word: "RHYTHM", meaning: "Ritmo" },
+        { word: "FLUORESCENT", meaning: "Fluorescente" },
+        { word: "PRONUNCIATION", meaning: "Pronunciación" },
+        { word: "PERSEVERANCE", meaning: "Perseverancia" },
+        { word: "MISCELLANEOUS", meaning: "Variado / Misceláneo" },
+        { word: "MAINTENANCE", meaning: "Mantenimiento" },
+        { word: "CONSCIENTIOUS", meaning: "Concienzudo / Cuidadoso" },
+        { word: "UNBELIEVABLE", meaning: "Increíble" }
+      ]
+    };
+
+    let currentLevel = 'easy';
+    let currentWordIndex = 0;
+    let speechSpeed = 1.0;
+    let currentMode = 'present';
+    let letterIndex = 0;
+    let showTranslation = false;
+
+    // Web Audio API for Arcade SFX
+    let audioCtx = null;
+
+    function initAudioContext() {
+      if (!audioCtx) {
+        const AudioClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioClass) audioCtx = new AudioClass();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playRetroSFX(type) {
+      initAudioContext();
+      if (!audioCtx) return;
+
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (type === 'click') {
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(450, now);
+        osc.frequency.exponentialRampToValueAtTime(750, now + 0.04);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.04);
+        osc.start(now);
+        osc.stop(now + 0.04);
+      } else if (type === 'correct') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.setValueAtTime(659.25, now + 0.07);
+        osc.frequency.setValueAtTime(783.99, now + 0.14);
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+        osc.start(now);
+        osc.stop(now + 0.3);
+      } else if (type === 'wrong') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(240, now);
+        osc.frequency.setValueAtTime(140, now + 0.1);
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
+        osc.start(now);
+        osc.stop(now + 0.25);
+      }
+    }
+
+    // Web Speech API - Speaks English Word
+    function speakCurrentWord() {
+      playRetroSFX('click');
+      const activeList = wordLevels[currentLevel];
+      const currentObj = activeList[currentWordIndex];
+      if (!currentObj) return;
+
+      const btn = document.getElementById('listen-main-btn');
+      btn.classList.add('is-pressed');
+      setTimeout(() => btn.classList.remove('is-pressed'), 180);
+
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(currentObj.word);
+        utterance.lang = 'en-US';
+        utterance.rate = speechSpeed;
+
+        const voices = window.speechSynthesis.getVoices();
+        const englishVoice = voices.find(v => v.lang.includes('en-US') || v.lang.includes('en-GB') || v.lang.includes('en'));
+        if (englishVoice) {
+          utterance.voice = englishVoice;
+        }
+
+        window.speechSynthesis.speak(utterance);
+      } else {
+        alert("Tu navegador no soporta síntesis de voz en inglés.");
+      }
+    }
+
+    function loadWord() {
+      letterIndex = 0;
+      showTranslation = false;
+
+      const activeList = wordLevels[currentLevel];
+      const wordObj = activeList[currentWordIndex];
+
+      const levelNames = {
+        easy: "🟢 EASY LEVEL",
+        medium: "🟡 MEDIUM LEVEL",
+        hard: "🔴 HARD LEVEL",
+        challenge: "🏆 CHALLENGE LEVEL"
+      };
+
+      document.getElementById('level-title-display').innerText = `LEVEL: ${levelNames[currentLevel]}`;
+      document.getElementById('word-counter').innerText = `${currentWordIndex + 1} / ${activeList.length}`;
+      document.getElementById('hint-text').innerText = "Significado: Haz clic en 'SPANISH MEANING' para revelar.";
+
+      // Reset presentation word view
+      const wordDisplay = document.getElementById('word-display');
+      wordDisplay.innerText = "? ".repeat(wordObj.word.length).trim();
+      wordDisplay.className = "pixel-font-title text-2xl md:text-4xl lg:text-5xl tracking-widest text-purple-400 break-all";
+
+      // Reset quiz
+      document.getElementById('quiz-input').value = "";
+      document.getElementById('quiz-feedback').classList.add('hidden');
+    }
+
+    function selectLevel(level) {
+      playRetroSFX('click');
+      currentLevel = level;
+      currentWordIndex = 0;
+
+      // Update Tab Styles
+      ['easy', 'medium', 'hard', 'challenge'].forEach(lvl => {
+        const tabBtn = document.getElementById(`tab-${lvl}`);
+        if (lvl === level) {
+          tabBtn.className = "pixel-tab pixel-tab-active flex items-center gap-2";
+        } else {
+          tabBtn.className = "pixel-tab pixel-tab-inactive flex items-center gap-2";
+        }
+      });
+
+      loadWord();
+    }
+
+    function revealWord() {
+      playRetroSFX('click');
+      const activeList = wordLevels[currentLevel];
+      const wordObj = activeList[currentWordIndex];
+      const wordDisplay = document.getElementById('word-display');
+      
+      wordDisplay.innerText = wordObj.word.split('').join(' ');
+      wordDisplay.className = "pixel-font-title text-2xl md:text-4xl lg:text-5xl tracking-widest text-[#00ff66] break-all";
+    }
+
+    function revealLetterByLetter() {
+      playRetroSFX('click');
+      const activeList = wordLevels[currentLevel];
+      const wordObj = activeList[currentWordIndex];
+      const wordDisplay = document.getElementById('word-display');
+      const fullLength = wordObj.word.length;
+
+      if (letterIndex < fullLength) {
+        letterIndex++;
+      } else {
+        letterIndex = fullLength;
+      }
+
+      let revealedPart = wordObj.word.substring(0, letterIndex);
+      let hiddenPart = "? ".repeat(fullLength - letterIndex).trim();
+
+      let formattedText = (revealedPart.split('').join(' ') + " " + hiddenPart).trim();
+      wordDisplay.innerText = formattedText;
+      wordDisplay.className = "pixel-font-title text-2xl md:text-4xl lg:text-5xl tracking-widest text-[#00f0ff] break-all";
+    }
+
+    function toggleTranslation() {
+      playRetroSFX('click');
+      showTranslation = !showTranslation;
+      const activeList = wordLevels[currentLevel];
+      const wordObj = activeList[currentWordIndex];
+      const hintText = document.getElementById('hint-text');
+
+      if (showTranslation) {
+        hintText.innerText = `Significado: ${wordObj.meaning.toUpperCase()}`;
+      } else {
+        hintText.innerText = "Significado: Haz clic en 'SPANISH MEANING' para revelar.";
+      }
+    }
+
+    function checkSpelling() {
+      const input = document.getElementById('quiz-input').value.trim().toUpperCase();
+      const activeList = wordLevels[currentLevel];
+      const currentWord = activeList[currentWordIndex].word.toUpperCase();
+      const feedback = document.getElementById('quiz-feedback');
+
+      feedback.classList.remove('hidden');
+
+      if (input === currentWord) {
+        playRetroSFX('correct');
+        feedback.className = "p-3 border-4 border-[#00ff66] bg-[#022b10] text-[#00ff66] text-lg md:text-xl font-bold rounded-none";
+        feedback.innerHTML = "✨ EXCELLENT! CORRECT SPELLING! 🏆";
+      } else {
+        playRetroSFX('wrong');
+        feedback.className = "p-3 border-4 border-[#ff007f] bg-[#330019] text-[#ff007f] text-lg md:text-xl font-bold rounded-none";
+        feedback.innerHTML = "❌ TRY AGAIN! LISTEN CAREFULLY 🎧";
+      }
+    }
+
+    function setSpeed(speed) {
+      playRetroSFX('click');
+      speechSpeed = speed;
+      
+      const btnNormal = document.getElementById('speed-normal');
+      const btnSlow = document.getElementById('speed-slow');
+
+      if (speed === 1.0) {
+        btnNormal.className = "px-3 py-1 bg-purple-600 border-2 border-purple-300 text-white font-bold text-xs";
+        btnSlow.className = "px-3 py-1 bg-purple-950 border-2 border-purple-800 text-gray-400 hover:bg-purple-700 text-xs";
+      } else {
+        btnSlow.className = "px-3 py-1 bg-purple-600 border-2 border-purple-300 text-white font-bold text-xs";
+        btnNormal.className = "px-3 py-1 bg-purple-950 border-2 border-purple-800 text-gray-400 hover:bg-purple-700 text-xs";
+      }
+    }
+
+    function setMode(mode) {
+      playRetroSFX('click');
+      currentMode = mode;
+      
+      const presentContainer = document.getElementById('present-container');
+      const quizContainer = document.getElementById('quiz-container');
+      const btnPresent = document.getElementById('mode-present-btn');
+      const btnQuiz = document.getElementById('mode-quiz-btn');
+
+      if (mode === 'present') {
+        presentContainer.classList.remove('hidden');
+        quizContainer.classList.add('hidden');
+        btnPresent.className = "pixel-btn pixel-btn-blue text-[10px] py-2 px-3 border-2 border-white";
+        btnQuiz.className = "pixel-btn pixel-btn-yellow text-[10px] py-2 px-3 opacity-60";
+      } else {
+        presentContainer.classList.add('hidden');
+        quizContainer.classList.remove('hidden');
+        btnQuiz.className = "pixel-btn pixel-btn-yellow text-[10px] py-2 px-3 border-2 border-white";
+        btnPresent.className = "pixel-btn pixel-btn-blue text-[10px] py-2 px-3 opacity-60";
+      }
+    }
+
+    function nextWord() {
+      playRetroSFX('click');
+      const activeList = wordLevels[currentLevel];
+      currentWordIndex = (currentWordIndex + 1) % activeList.length;
+      loadWord();
+    }
+
+    function prevWord() {
+      playRetroSFX('click');
+      const activeList = wordLevels[currentLevel];
+      currentWordIndex = (currentWordIndex - 1 + activeList.length) % activeList.length;
+      loadWord();
+    }
+
+    function randomWord() {
+      playRetroSFX('click');
+      const activeList = wordLevels[currentLevel];
+      currentWordIndex = Math.floor(Math.random() * activeList.length);
+      loadWord();
+    }
+
+    window.onload = function() {
+      lucide.createIcons();
+      loadWord();
+
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.onvoiceschanged = function() {
+          window.speechSynthesis.getVoices();
+        };
+      }
+    };
+  </script>
+</body>
+</html>
